@@ -1,0 +1,30 @@
+services:
+  postgres_db:
+    image: database:latest
+    container_name: vendor-postgres
+    environment:
+      POSTGRES_DB: 'vendor_management_db'
+      POSTGRES_USER: 'vendor_management_user'  
+      POSTGRES_PASSWORD: 'vendor_management_password'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: 
+      dockerfile: Dockerfile
+    command: python manage.py runserver
+    image: ibrahim966/vendor-management
+    container_name: vendor-management-container  
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+    volumes:
+      - .:/web
+      - static_volume:/app/media
+      - ./static:/app/static
+      
+
+volumes:
+  postgres_data:
+  static_volume:
